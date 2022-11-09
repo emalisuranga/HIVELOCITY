@@ -5,7 +5,7 @@ class FinalResult {
         $d = fopen($f, "r");
         $h = fgetcsv($d);
         $rcs = [];
-        while(!feof($d)) {
+        while (($r = fgetcsv($d)) !== false) {
             $r = fgetcsv($d);
             if(count($r) == 16) {
                 $amt = !$r[8] || $r[8] == "0" ? 0 : (float) $r[8];
