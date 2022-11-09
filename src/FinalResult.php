@@ -1,17 +1,23 @@
 <?php
 
 class FinalResult {
+
+    public static $error_msg = [
+        "ACCT_NUM_MISSING" => "Bank account number missing",
+        "BANK_CODE_MISSING" => "Bank branch code missing",
+        "E2E_ID_MISSING" => "End to end id missing",
+    ];
+
     function results($f) {
         $d = fopen($f, "r");
         $h = fgetcsv($d);
         $rcs = [];
         while (($r = fgetcsv($d)) !== false) {
-            $r = fgetcsv($d);
             if(count($r) == 16) {
                 $amt = !$r[8] || $r[8] == "0" ? 0 : (float) $r[8];
-                $ban = !$r[6] ? "Bank account number missing" : (int) $r[6];
-                $bac = !$r[2] ? "Bank branch code missing" : $r[2];
-                $e2e = !$r[10] && !$r[11] ? "End to end id missing" : $r[10] . $r[11];
+                $ban = !$r[6] || $r[6] == "0" ? self::$error_msg['ACCT_NUM_MISSING'] : (int) $r[6];
+                $bac = !$r[2] || $r[2] == "0" ? self::$error_msg['BANK_CODE_MISSING'] : $r[2];
+                $e2e = !$r[10] && !$r[11] ? self::$error_msg['E2E_ID_MISSING'] : $r[10] . $r[11];
                 $rcd = [
                     "amount" => [
                         "currency" => $h[0],
